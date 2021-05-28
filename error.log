@@ -1,0 +1,29 @@
+{"level":"error","message":"Error - Tue May 25 2021 23:58:08 GMT+0100 (British Summer Time) --- MongooseError: The `uri` parameter to `openUri()` must be a string, got \"undefined\". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string."}
+{"level":"error","message":"Error - Wed May 26 2021 00:04:31 GMT+0100 (British Summer Time) --- MongooseError: The `uri` parameter to `openUri()` must be a string, got \"undefined\". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string."}
+{"level":"error","message":"Error - Wed May 26 2021 00:10:53 GMT+0100 (British Summer Time) --- MongooseError: The `uri` parameter to `openUri()` must be a string, got \"undefined\". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string."}
+{"level":"error","message":"Error - Wed May 26 2021 00:11:11 GMT+0100 (British Summer Time) --- MongooseError: The `uri` parameter to `openUri()` must be a string, got \"undefined\". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string."}
+{"level":"error","message":"Error - Wed May 26 2021 00:11:56 GMT+0100 (British Summer Time) --- MongooseError: The `uri` parameter to `openUri()` must be a string, got \"undefined\". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string."}
+{"level":"error","message":"Error - Wed May 26 2021 00:15:43 GMT+0100 (British Summer Time) --- Error: Invalid schema, expected `mongodb` or `mongodb+srv`"}
+{"level":"error","message":"Error - Thu May 27 2021 11:00:05 GMT+0100 (British Summer Time) --- Query string req can either be \"buy\" or \"sell"}
+{"level":"error","message":"Error - Fri May 28 2021 08:58:50 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 08:58:50 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 09:44:46 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 09:44:46 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 10:33:23 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 10:33:23 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 11:11:29 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 11:11:29 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 13:13:06 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 13:13:06 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 13:16:10 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 13:16:10 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 13:16:23 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 13:16:23 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 13:16:41 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 13:16:41 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 14:12:17 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 14:12:17 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 14:20:07 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 14:20:07 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 14:27:16 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
+{"level":"error","message":"Error - Fri May 28 2021 14:27:16 GMT+0100 (British Summer Time) --- MongoError: ns not found"}
