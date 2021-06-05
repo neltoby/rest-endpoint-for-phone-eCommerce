@@ -1,15 +1,16 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
 export interface IPhoneXtics {
-  'Storage Size': string;
-  New: string;
-  A1: string;
-  A2: string;
-  B1: string;
-  B2: string;
-  C: string;
-  'C/B': string;
-  'C/D': string;
+  storage_size: string;
+  new: string;
+  a1: string;
+  a2: string;
+  b1: string;
+  b2: string;
+  c: string;
+  'c/b': string;
+  'c/d': string;
 }
 
 export type PhoneInfo = {
@@ -43,8 +44,14 @@ export interface IValidateReq {
 }
 
 export interface IValidatedReq extends IValidateReq {
-  page?: number,
-  limit?: number
+  page?: number;
+  limit?: number;
+}
+
+export interface ISearchReq {
+  q?: string;
+  min?: string;
+  max?: string;
 }
 
 export enum ErrorCodes {
@@ -52,4 +59,106 @@ export enum ErrorCodes {
   NOT_FOUND = 403,
   NOT_ACCEPTABLE = 406,
   INTERNAL_SERVER_ERORR = 500,
+}
+
+export interface IDataDescription extends IPhoneXtics {
+  _id: string;
+}
+
+export interface IRetResDesc {
+  _id: string;
+  storage_size?: string;
+  new?: string;
+  a1?: string;
+  a2?: string;
+  b1?: string;
+  b2?: string;
+  c?: string;
+  'c/b'?: string;
+  'c/d'?: string;
+}
+
+export interface IRetRes {
+  _id: string;
+  description: IRetResDesc[];
+  phone_name: string;
+  category: string;
+}
+
+export enum DataDescEnum {
+  _id = '_id',
+  storage_size = 'storage_size',
+  new = 'new',
+  a1 = 'a1',
+  a2 = 'a2',
+  b1 = 'b1',
+  b2 = 'b2',
+  c = 'c',
+  'c/b' = 'c/b',
+  'c/d' = 'c/d',
+}
+
+export interface IDataCollected {
+  _id: string;
+  description: IDataDescription[];
+  phone_name: string;
+  category: string;
+  __v: number;
+}
+
+export interface IRetVal {
+  phone_name: string;
+  category: string;
+  storage: string;
+  condition: string;
+  price: string;
+}
+
+export interface IRetSellDataFromDb {
+  sellList?: IDataCollected[];
+  buyList?: IDataCollected[];
+  paginator?: {
+    totalSell: number;
+    perPage: number;
+    pageCount: number;
+    currentPage: number;
+    slNo: number;
+    hasPrevPage: boolean;
+    hasNextPage: boolean;
+    next: number | null;
+    prev: number | null;
+  };
+}
+
+export interface IGeneralObj {
+  [key: string]: string;
+}
+
+export interface IPriceReq {
+  min: number;
+  max: number;
+}
+
+export interface ICacheVariable {
+  varName: string;
+  varValue: any;
+}
+
+export interface ICacheRetVal {
+  action: string;
+  success: boolean;
+  message: string;
+}
+
+export interface IGetCacheRetValSuccess {
+  action: string;
+  success: boolean;
+  message: string;
+  value: any;
+}
+
+export interface IGetCacheRetValFailure {
+  action: string;
+  success: boolean;
+  message: string;
 }

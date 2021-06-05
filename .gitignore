@@ -4,6 +4,9 @@
 #build
 /dist
 
+#log
+error.log
+
 #misc
 .env
 credential.json

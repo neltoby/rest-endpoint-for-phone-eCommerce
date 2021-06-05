@@ -1,11 +1,19 @@
+/* eslint-disable import/extensions */
+/* eslint-disable import/no-unresolved */
 /* eslint-disable no-return-await */
 /* eslint-disable no-else-return */
 /* eslint-disable class-methods-use-this */
 import DataAccessService from '../model/db/data-access.service';
 import {
-  ErrorCodes, IValidateReq, IValidatedReq, ReqParam,
+  ErrorCodes,
+  IValidateReq,
+  IValidatedReq,
+  ReqParam,
+  IDataCollected,
 } from '../interfaces/interfaces';
 import CustomError from '../util/error/error.service';
+
+import dataAdapterFxn from '../util/scripts/data-adapter';
 
 export default class GetRequestService {
   private dataAccess: DataAccessService;
@@ -24,12 +32,22 @@ export default class GetRequestService {
 
   async getSellRequest(req: IValidatedReq) {
     const { page, limit } = req;
-    return await this.dataAccess.findSellRequest({ page, limit });
+    const data: any = await this.dataAccess.findSellRequest({ page, limit });
+    const sellList = this.dataAdapter(data.sellList as IDataCollected[]);
+    data.sellList = sellList;
+    return data;
   }
 
   async getBuyRequest(req: IValidatedReq) {
     const { page, limit } = req;
-    return await this.dataAccess.findBuyRequest({ page, limit });
+    const data: any = await this.dataAccess.findBuyRequest({ page, limit });
+    const buyList = this.dataAdapter(data.buyList as IDataCollected[]);
+    data.buyList = buyList;
+    return data;
+  }
+
+  private dataAdapter(data: IDataCollected[]) {
+    return dataAdapterFxn(data);
   }
 
   validation(query: IValidateReq): IValidatedReq {

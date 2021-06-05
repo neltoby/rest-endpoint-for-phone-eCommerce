@@ -7,6 +7,8 @@ import httpAdapter from './http-adapter';
 import syncData from './sync-data/sync-data.controller';
 import DatabaseService from './model/db/db.service';
 import getReqData from './get-request/get-request.controller';
+import searchReq from './search-request/search-request.controller';
+import category from './category/category.controller';
 
 export default class App {
   private _app: Express;
@@ -33,6 +35,8 @@ export default class App {
   routes() {
     this.app.get(`/${API_ROUTE}`, httpAdapter(getReqData));
     this.app.get(`/${API_ROUTE}/sync-data`, httpAdapter(syncData));
+    this.app.get(`/${API_ROUTE}/search`, httpAdapter(searchReq));
+    this.app.get(`/${API_ROUTE}/category/:category`, httpAdapter(category));
     this.app.get('/', (req: Request, res: Response) => {
       res.send('Hello world');
     });

@@ -1,14 +1,14 @@
 import { Request } from 'express';
 import logger from '../util/logger';
-import GetRequestService from './get-request.service';
+import CategoryService from './category.service';
 import { IValidateReq, ErrorCodes } from '../interfaces/interfaces';
 
 export default async (req: Request) => {
-  const { query }: { query: IValidateReq } = req;
+  const { query, params }: { query: IValidateReq; params: { category?: string } } = req;
   try {
-    logger.log('Logging request to get data from request controller');
-    const newReq = new GetRequestService(query);
-    const data: any = await newReq.checkReq();
+    logger.log('Logging request to get data for category from request controller');
+    const newReq = new CategoryService(params.category as string, query);
+    const data = await newReq.validateCategory();
     return {
       body: data,
     };
