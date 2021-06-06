@@ -24,6 +24,4 @@ const sellRequestSchema = new Schema({
 
 sellRequestSchema.plugin(mongoosePaginate);
 
-const SellRequest = mongoose.model('SellRequest', sellRequestSchema);
-
-export default SellRequest;
+export default sellRequestSchema;

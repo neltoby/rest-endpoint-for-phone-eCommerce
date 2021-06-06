@@ -24,6 +24,4 @@ const buyRequestSchema = new Schema({
 
 buyRequestSchema.plugin(mongoosePaginate);
 
-const BuyRequest = mongoose.model('BuyRequest', buyRequestSchema);
-
-export default BuyRequest;
+export default buyRequestSchema;

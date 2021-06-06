@@ -31,6 +31,7 @@ export default class DataAccessService extends DatabaseService {
   // eslint-disable-next-line class-methods-use-this
   public async insertToBuyRequest(data: RequestData) {
     try {
+      // const allbuys = await BuyRequest.find({});
       logger.log('Preparing insert to Buy request collection.');
       const buyReqKey = 'Buy Request';
       const allkeys: Array<string> = Object.keys(data[buyReqKey]);
@@ -40,11 +41,11 @@ export default class DataAccessService extends DatabaseService {
         logger.log('Database connection is set ...');
         logger.log('Dropping collection for buy request...');
         logger.log('Starting insert operation ...');
-        await BuyRequest.collection.drop();
+        // if (allbuys.length) await BuyRequest.collection.drop();
         return Promise.all(
           allkeys.map(async (item, i) => {
             const currentField = data[buyReqKey][item];
-            const doc = new BuyRequest();
+            const doc = new this.BuyRequest();
             doc.phone_name = item;
             doc.category = currentField.category;
             doc.description = currentField.description;
@@ -64,21 +65,20 @@ export default class DataAccessService extends DatabaseService {
   public async insertToSellRequest(data: RequestData) {
     try {
       // const allsells = await SellRequest.find({});
-      // if (!allsells.length) {
-      logger.log('Preparing insert to Sell request collection.');
       const sellReqKey = 'Sell Requests';
       const allkeys: Array<string> = Object.keys(data[sellReqKey]);
+      logger.log('Preparing insert to Sell request collection.');
       logger.log('Checking connection status ...');
       logger.log(`Database connection status is ${DatabaseService.connection}`);
       if (DatabaseService.connection === 'connected') {
         logger.log('Database connection is set ...');
         logger.log('Dropping collection for sell request...');
         logger.log('Starting insert operation ...');
-        await SellRequest.collection.drop();
+        // if (allsells.length) await SellRequest.collection.drop();
         return Promise.all(
           allkeys.map(async (item, i) => {
             const currentField = data[sellReqKey][item];
-            const doc = new SellRequest();
+            const doc = new this.SellRequest();
             doc.phone_name = item;
             doc.category = currentField.category;
             doc.description = currentField.description;
@@ -88,9 +88,6 @@ export default class DataAccessService extends DatabaseService {
         );
         // eslint-disable-next-line no-else-return
       } else throw 'Database is not connected to a database instance.';
-      // } else {
-      //   return data;
-      // }
     } catch (e: any) {
       logger.error(e);
       throw new CustomError(e, 500);
@@ -117,7 +114,7 @@ export default class DataAccessService extends DatabaseService {
         meta: 'paginator',
       };
       const options = { ...req, customLabels };
-      return await SellRequest.paginate({}, options);
+      return await this.SellRequest.paginate({}, options);
     } catch (e) {
       throw new CustomError(e, ErrorCodes.INTERNAL_SERVER_ERORR);
     }
@@ -143,7 +140,7 @@ export default class DataAccessService extends DatabaseService {
         meta: 'paginator',
       };
       const options = { ...req, customLabels };
-      return await BuyRequest.paginate({}, options);
+      return await this.BuyRequest.paginate({}, options);
     } catch (e: any) {
       throw new CustomError(e, ErrorCodes.INTERNAL_SERVER_ERORR);
     }
@@ -176,8 +173,8 @@ export default class DataAccessService extends DatabaseService {
         select['description.storage_size'] = 1;
         select[condVal] = 1;
         const retVal: any[] = await Promise.all([
-          BuyRequest.find(combinedObj).select(select).exec(),
-          SellRequest.find(combinedObj).select(select).exec(),
+          this.BuyRequest.find(combinedObj).select(select).exec(),
+          this.SellRequest.find(combinedObj).select(select).exec(),
         ]);
         retData = [...retVal[0], ...retVal[1]];
         // return data;
@@ -187,8 +184,8 @@ export default class DataAccessService extends DatabaseService {
         select.category = 1;
         select.description = 1;
         const retVal = await Promise.all([
-          BuyRequest.find(combinedObj).select(select).exec(),
-          SellRequest.find(combinedObj).select(select).exec(),
+          this.BuyRequest.find(combinedObj).select(select).exec(),
+          this.SellRequest.find(combinedObj).select(select).exec(),
         ]);
         retData = [...retVal[0], ...retVal[0]];
       }
@@ -213,7 +210,10 @@ export default class DataAccessService extends DatabaseService {
   async findByPriceRange(price: IPriceReq) {
     try {
       const { min, max } = price;
-      const data = await Promise.all([SellRequest.find({}).exec(), BuyRequest.find({}).exec()]);
+      const data = await Promise.all([
+        this.SellRequest.find({}).exec(),
+        this.BuyRequest.find({}).exec(),
+      ]);
       return [...sortByPrice(data[0], price), ...sortByPrice(data[1], price)];
     } catch (e) {
       logger.log(
@@ -241,7 +241,7 @@ export default class DataAccessService extends DatabaseService {
         meta: 'paginator',
       };
       const options = { ...req, customLabels };
-      return await BuyRequest.paginate({ phone_name: category }, options);
+      return await this.BuyRequest.paginate({ phone_name: category }, options);
     } catch (e) {
       logger.log(
         `Errored while fetching data for find by category request by price findCategory method - ${e}`,

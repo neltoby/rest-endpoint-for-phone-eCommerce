@@ -2,13 +2,16 @@
 	"name": "eze-wholesale",
 	"version": "1.0.0",
 	"description": "A graphql and react project",
-	"main": "dist/src/main.js",
+	"main": "dist/main.js",
+	"engines": {
+		"node": "15.x"
+	},
 	"scripts": {
 		"build": "rimraf dist && tsc",
 		"preserve": "npm run build",
 		"serve": "concurrently \"tsc --watch\" \"nodemon -q dist/main.js\"",
 		"prestart": "npm run build",
-		"start": "node src/main.js",
+		"start": "node dist/main.js",
 		"test": "jest",
 		"test:dev": "jest --watchAll"
 	},
