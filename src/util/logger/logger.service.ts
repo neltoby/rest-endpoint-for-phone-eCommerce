@@ -21,11 +21,11 @@ export default class LoggerService {
   private makeLogger() {
     LoggerService.loggerInstance = winston.createLogger({
       transports: [
-        new transports.File({
-          filename: 'error.log',
-          level: 'error',
-          format: format.json(),
-        }),
+        // new transports.File({
+        //   filename: 'error.log',
+        //   level: 'error',
+        //   format: format.json(),
+        // }),
         new transports.Console({
           level: 'info',
           format: format.combine(format.colorize(), format.simple()),
