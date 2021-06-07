@@ -10,7 +10,6 @@
 		"build": "rimraf dist && tsc",
 		"preserve": "npm run build",
 		"serve": "concurrently \"tsc --watch\" \"nodemon -q dist/index.js\"",
-		"prestart": "npm run build",
 		"start": "pm2-runtime start ecosystem.config.js --env production",
 		"test": "jest",
 		"test:dev": "jest --watchAll"
