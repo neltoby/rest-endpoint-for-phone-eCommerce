@@ -1,7 +1,7 @@
 module.exports = {
 	apps: [
 		{
-			script: 'node dist/main.js',
+			script: 'dist/index.js',
 			watch: '.',
 		},
 	],
