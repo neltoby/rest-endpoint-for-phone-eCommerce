@@ -12,8 +12,7 @@ import { PaginateResult } from 'mongoose';
 import { forEachChild } from 'typescript';
 import CustomError from '../../util/error/error.service';
 import logger from '../../util/logger';
-import BuyRequest from '../schema/buyRequest';
-import SellRequest from '../schema/sellRequest';
+
 import {
   RequestData,
   ErrorCodes,
@@ -42,7 +41,6 @@ export default class DataAccessService extends DatabaseService {
         logger.log('Database connection is set ...');
         logger.log('Dropping collection for buy request...');
         logger.log('Starting insert operation ...');
-        // if (allbuys.length) await BuyRequest.collection.drop();
         return Promise.all(
           allkeys.map(async (item, i) => {
             const currentField = data[buyReqKey][item];
@@ -65,7 +63,6 @@ export default class DataAccessService extends DatabaseService {
   // eslint-disable-next-line class-methods-use-this
   public async insertToSellRequest(data: RequestData) {
     try {
-      // const allsells = await SellRequest.find({});
       const sellReqKey = 'Sell Requests';
       const allkeys: Array<string> = Object.keys(data[sellReqKey]);
       logger.log('Preparing insert to Sell request collection.');
@@ -75,7 +72,6 @@ export default class DataAccessService extends DatabaseService {
         logger.log('Database connection is set ...');
         logger.log('Dropping collection for sell request...');
         logger.log('Starting insert operation ...');
-        // if (allsells.length) await SellRequest.collection.drop();
         return Promise.all(
           allkeys.map(async (item, i) => {
             const currentField = data[sellReqKey][item];
