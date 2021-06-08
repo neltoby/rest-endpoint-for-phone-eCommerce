@@ -45,7 +45,7 @@ export default class App {
   middleWare() {
     this.app.use(express.json());
     this.app.use((req, res, next) => {
-      res.setHeader('Access-Control-Allow-Origin', 'https://eze-store.herokuapp.com');
+      res.setHeader('Access-Control-Allow-Origin', 'https://eze-phone-store.herokuapp.com');
       res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
       next();
     });
