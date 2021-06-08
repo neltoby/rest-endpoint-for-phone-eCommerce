@@ -9,15 +9,12 @@ export default async (req: Request) => {
     logger.log('Logging request for data from search controller');
     const { query }: { query: ISearchReq } = req;
     // eslint-disable-next-line no-nested-ternary
-    const searchTerm: string | number | string[] = query.q !== undefined
-      ? query.q
-      : query.min && query.max
-        ? [query.min, query.max]
-        : 400;
+    const searchTerm: string | number | string[] = query.q !== undefined ? query.q : query.min && query.max ? [query.min, query.max] : 400;
     if (typeof searchTerm === 'number') {
       throw new CustomError('Query string not recognized', ErrorCodes.NOT_ACCEPTABLE);
     }
     const searchService = new SearchRequestService(searchTerm);
+    searchService.validation({ page: query.page, limit: query.limit });
     const data = await searchService.searchTermType();
     return {
       body: data,

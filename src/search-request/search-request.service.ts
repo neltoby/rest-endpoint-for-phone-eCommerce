@@ -1,8 +1,15 @@
+/* eslint-disable no-undef */
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable no-return-await */
 /* eslint-disable no-underscore-dangle */
-import { ErrorCodes, IDataCollected, IGeneralObj } from '../interfaces/interfaces';
+import {
+  ErrorCodes,
+  IDataCollected,
+  IGeneralObj,
+  IValidateReq,
+  IValidatedReq,
+} from '../interfaces/interfaces';
 import DataAccessService from '../model/db/data-access.service';
 import CustomError from '../util/error/error.service';
 import logger from '../util/logger';
@@ -13,6 +20,8 @@ export default class SearchRequestService {
   private dataAccess: DataAccessService;
 
   private sortedArray: Array<IGeneralObj | undefined>;
+
+  private query: IValidatedReq;
 
   set searchTerm(val: string | string[]) {
     this._searchTerm = val;
@@ -27,6 +36,7 @@ export default class SearchRequestService {
     this.dataAccess = new DataAccessService();
     this.sortedArray = [];
     this.sortedArray.fill(undefined, 0, 2);
+    this.query = {};
   }
 
   private async searchTermStr(): Promise<any> {
@@ -41,8 +51,11 @@ export default class SearchRequestService {
     } else {
       this.sortArrayElement(searchTerm);
     }
-    const data = await this.dataAccess.findByArrayTerm(this.sortedArray);
-    return this.dataAdapter(data);
+    const data = await this.dataAccess.findByArrayTerm(this.sortedArray, this.query);
+    return {
+      data: this.dataAdapter(data.data),
+      paginator: data.paginator,
+    };
   }
 
   private sortArrayElement(val: string) {
@@ -58,6 +71,32 @@ export default class SearchRequestService {
     } else {
       throw new CustomError('Search query is invalid.', ErrorCodes.BAD_REQUEST);
     }
+  }
+
+  validation(query: IValidateReq) {
+    // eslint-disable-next-line prefer-const
+    let { page = 1, limit = 2 } = query;
+    const retVal: IValidatedReq = {};
+    if (typeof page === 'string') {
+      try {
+        page = parseInt(page, 10);
+      } catch (e) {
+        throw new CustomError('Query string "page" must be an integer', ErrorCodes.BAD_REQUEST);
+      }
+    }
+
+    if (typeof page === 'number') retVal.page = page;
+
+    if (typeof limit === 'string') {
+      try {
+        limit = parseInt(limit, 10);
+      } catch (e) {
+        throw new CustomError('Query string "limit" must be an integer', ErrorCodes.BAD_REQUEST);
+      }
+    }
+
+    if (typeof limit === 'number') retVal.limit = limit;
+    this.query = retVal;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -145,8 +184,14 @@ export default class SearchRequestService {
         ErrorCodes.NOT_ACCEPTABLE,
       );
     }
-    const data = await this.dataAccess.findByPriceRange({ min: minNumber, max: maxNumber });
-    return this.dataAdapter(data);
+    const data = await this.dataAccess.findByPriceRange(
+      { min: minNumber, max: maxNumber },
+      this.query,
+    );
+    return {
+      data: this.dataAdapter(data.data),
+      paginator: data.paginator,
+    };
   }
 
   async searchTermType() {

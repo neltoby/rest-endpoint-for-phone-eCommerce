@@ -48,7 +48,7 @@ export interface IValidatedReq extends IValidateReq {
   limit?: number;
 }
 
-export interface ISearchReq {
+export interface ISearchReq extends IValidatedReq {
   q?: string;
   min?: string;
   max?: string;
@@ -161,4 +161,13 @@ export interface IGetCacheRetValFailure {
   action: string;
   success: boolean;
   message: string;
+}
+
+export interface ISearchOptions {
+  page?: number;
+  limit?: number;
+  customLabels?: {
+    [key: string]: string;
+  };
+  select?: any;
 }

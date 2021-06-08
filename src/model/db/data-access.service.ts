@@ -23,6 +23,7 @@ import {
   IRetResDesc,
   IPriceReq,
   DataDescEnum,
+  ISearchOptions,
 } from '../../interfaces/interfaces';
 import DatabaseService from './db.service';
 import sortByPrice from '../../util/scripts/sort-by-price';
@@ -146,7 +147,10 @@ export default class DataAccessService extends DatabaseService {
     }
   }
 
-  async findByArrayTerm(arr: Array<IGeneralObj | undefined>): Promise<any> {
+  async findByArrayTerm(
+    arr: Array<IGeneralObj | undefined>,
+    req: { page?: number; limit?: number },
+  ): Promise<any> {
     try {
       logger.log('Calling extraction function for the current data');
       const newArr = arr.filter((item: IGeneralObj | undefined) => item !== undefined);
@@ -165,6 +169,28 @@ export default class DataAccessService extends DatabaseService {
         }
       });
       let retData: IRetRes[];
+      let retVal: any[];
+      const customLabels = {
+        totalDocs: 'totalDocs',
+        docs: 'data',
+        limit: 'perPage',
+        page: 'currentPage',
+        nextPage: 'next',
+        prevPage: 'prev',
+        totalPages: 'pageCount',
+        pagingCounter: 'slNo',
+        meta: 'paginator',
+      };
+      let totalDocs: number;
+      let perPage: number;
+      let pageCount: number;
+      let currentPage: number;
+      let slNo: number;
+      let hasPrevPage: boolean;
+      let hasNextPage: boolean;
+      let prev: number | null;
+      let next: number | null;
+      const options: ISearchOptions = { ...req, customLabels };
       if (condition) {
         const select: { [key: string]: number } = {};
         const condVal = `description.${conditionValues.condition}`;
@@ -172,22 +198,23 @@ export default class DataAccessService extends DatabaseService {
         select.category = 1;
         select['description.storage_size'] = 1;
         select[condVal] = 1;
-        const retVal: any[] = await Promise.all([
-          this.BuyRequest.find(combinedObj).select(select).exec(),
-          this.SellRequest.find(combinedObj).select(select).exec(),
+        options.select = select;
+        retVal = await Promise.all([
+          this.BuyRequest.paginate(combinedObj, options),
+          this.SellRequest.paginate(combinedObj, options),
         ]);
-        retData = [...retVal[0], ...retVal[1]];
-        // return data;
+        retData = [...retVal[0].data, ...retVal[1].data];
       } else {
         const select: { [key: string]: number } = {};
         select.phone_name = 1;
         select.category = 1;
         select.description = 1;
-        const retVal = await Promise.all([
-          this.BuyRequest.find(combinedObj).select(select).exec(),
-          this.SellRequest.find(combinedObj).select(select).exec(),
+        options.select = select;
+        retVal = await Promise.all([
+          this.BuyRequest.paginate(combinedObj, options),
+          this.SellRequest.paginate(combinedObj, options),
         ]);
-        retData = [...retVal[0], ...retVal[0]];
+        retData = [...retVal[0].data, ...retVal[0].data];
       }
       if (retData) {
         if (combinedObj['description.storage_size']) {
@@ -200,21 +227,70 @@ export default class DataAccessService extends DatabaseService {
           });
           return desc;
         }
-        return retData;
+        totalDocs = retVal[0].paginator.totalDocs + retVal[1].paginator.totalDocs;
+        perPage = retVal[0].paginator.perPage + retVal[1].paginator.perPage;
+        pageCount = retVal[0].paginator.pageCount + retVal[1].paginator.pageCount;
+        currentPage = retVal[0].paginator?.currentPage || retVal[1].paginator?.currentPage;
+        slNo = retVal[0].paginator?.slNo || retVal[1].paginator?.slNo;
+        hasPrevPage = retVal[0].paginator?.hasPrevPage === true
+          ? retVal[0].paginator.hasPrevPage
+          : retVal[1].paginator.hasPrevPage;
+        hasNextPage = retVal[0].paginator?.hasNextPage === true
+          ? retVal[0].paginator.hasNextPage
+          : retVal[1].paginator.hasNextPage;
+        prev = retVal[0].paginator?.prev || retVal[1].paginator?.prev;
+        next = retVal[0].paginator?.next > retVal[1].paginator?.next
+          ? retVal[0].paginator.next
+          : retVal[0].paginator.next;
+        return {
+          data: retData,
+          paginator: {
+            totalDocs,
+            perPage,
+            pageCount,
+            currentPage,
+            slNo,
+            hasPrevPage,
+            hasNextPage,
+            prev,
+            next,
+          },
+        };
       }
     } catch (e: any) {
       throw new CustomError(e, ErrorCodes.INTERNAL_SERVER_ERORR);
     }
   }
 
-  async findByPriceRange(price: IPriceReq) {
+  async findByPriceRange(price: IPriceReq, req: { page?: number; limit?: number }) {
     try {
       const { min, max } = price;
-      const data = await Promise.all([
+      let { page, limit } = req;
+      const retVal = await Promise.all([
         this.SellRequest.find({}).exec(),
         this.BuyRequest.find({}).exec(),
       ]);
-      return [...sortByPrice(data[0], price), ...sortByPrice(data[1], price)];
+      const retData = [...sortByPrice(retVal[0], price), ...sortByPrice(retVal[1], price)];
+      limit = (limit as number) * 10;
+      page = page as number;
+      const start = ((page as number) - 1) * limit;
+      const end = start + (limit - 1);
+      const currentData = retData.filter((item: any, i: number) => i >= start && i <= end);
+      const pageCount = Math.ceil(retData.length / limit);
+      return {
+        data: currentData,
+        paginator: {
+          totalDocs: retData.length,
+          perPage: limit / 10,
+          pageCount,
+          currentPage: page,
+          slNo: 1,
+          hasPrevPage: page !== 1,
+          hasNextPage: page < pageCount,
+          prev: page < 2 ? null : page - 1,
+          next: pageCount > page ? page + 1 : null,
+        },
+      };
     } catch (e) {
       logger.log(
         `Errored while fetching data for search request by price in findByPriceRange method - ${e}`,
