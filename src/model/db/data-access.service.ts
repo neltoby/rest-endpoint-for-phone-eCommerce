@@ -9,7 +9,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-throw-literal */
 import { PaginateResult } from 'mongoose';
-import { forEachChild } from 'typescript';
 import CustomError from '../../util/error/error.service';
 import logger from '../../util/logger';
 
@@ -21,7 +20,6 @@ import {
   IRetRes,
   IRetResDesc,
   IPriceReq,
-  DataDescEnum,
   ISearchOptions,
 } from '../../interfaces/interfaces';
 import DatabaseService from './db.service';
