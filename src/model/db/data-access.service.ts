@@ -11,7 +11,7 @@
 import { PaginateResult } from 'mongoose';
 import CustomError from '../../util/error/error.service';
 import logger from '../../util/logger';
-
+import dataAdapterFxn from '../../util/scripts/data-adapter';
 import {
   RequestData,
   ErrorCodes,
@@ -29,7 +29,7 @@ export default class DataAccessService extends DatabaseService {
   // eslint-disable-next-line class-methods-use-this
   public async insertToBuyRequest(data: RequestData) {
     try {
-      // const allbuys = await BuyRequest.find({});
+      const allbuys = await this.BuyRequest.find({});
       logger.log('Preparing insert to Buy request collection.');
       const buyReqKey = 'Buy Request';
       const allkeys: Array<string> = Object.keys(data[buyReqKey]);
@@ -38,6 +38,10 @@ export default class DataAccessService extends DatabaseService {
       if (DatabaseService.connection === 'connected') {
         logger.log('Database connection is set ...');
         logger.log('Dropping collection for buy request...');
+        if (allbuys.length) {
+          await this.BuyRequest.collection.drop();
+          logger.log('Buy request collection dropped');
+        }
         logger.log('Starting insert operation ...');
         return Promise.all(
           allkeys.map(async (item, i) => {
@@ -61,6 +65,7 @@ export default class DataAccessService extends DatabaseService {
   // eslint-disable-next-line class-methods-use-this
   public async insertToSellRequest(data: RequestData) {
     try {
+      const allsell = await this.SellRequest.find({});
       const sellReqKey = 'Sell Requests';
       const allkeys: Array<string> = Object.keys(data[sellReqKey]);
       logger.log('Preparing insert to Sell request collection.');
@@ -69,6 +74,10 @@ export default class DataAccessService extends DatabaseService {
       if (DatabaseService.connection === 'connected') {
         logger.log('Database connection is set ...');
         logger.log('Dropping collection for sell request...');
+        if (allsell.length) {
+          await this.SellRequest.collection.drop();
+          logger.log('Sell request collection dropped');
+        }
         logger.log('Starting insert operation ...');
         return Promise.all(
           allkeys.map(async (item, i) => {
