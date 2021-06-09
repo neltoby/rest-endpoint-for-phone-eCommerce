@@ -211,16 +211,6 @@ export default class DataAccessService extends DatabaseService {
         retData = [...retVal[0].data, ...retVal[0].data];
       }
       if (retData) {
-        if (combinedObj['description.storage_size']) {
-          const desc = retData.map((item: IRetRes) => {
-            const newArr = item.description.filter(
-              (filt: IRetResDesc) => filt.storage_size === combinedObj['description.storage_size'],
-            );
-            item.description = newArr;
-            return item;
-          });
-          return desc;
-        }
         totalDocs = retVal[0].paginator.totalDocs + retVal[1].paginator.totalDocs;
         perPage = retVal[0].paginator.perPage + retVal[1].paginator.perPage;
         pageCount = retVal[0].paginator.pageCount + retVal[1].paginator.pageCount;
@@ -236,6 +226,29 @@ export default class DataAccessService extends DatabaseService {
         next = retVal[0].paginator?.next > retVal[1].paginator?.next
           ? retVal[0].paginator.next
           : retVal[0].paginator.next;
+        if (combinedObj['description.storage_size']) {
+          const desc = retData.map((item: IRetRes) => {
+            const newArr = item.description.filter(
+              (filt: IRetResDesc) => filt.storage_size === combinedObj['description.storage_size'],
+            );
+            item.description = newArr;
+            return item;
+          });
+          return {
+            data: desc,
+            paginator: {
+              totalDocs,
+              perPage,
+              pageCount,
+              currentPage,
+              slNo,
+              hasPrevPage,
+              hasNextPage,
+              prev,
+              next,
+            },
+          };
+        }
         return {
           data: retData,
           paginator: {
